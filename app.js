@@ -2,7 +2,9 @@ const http = require('http'),
 path = require('path'),
 express = require('express'),
 bodyParser = require('body-parser');
+
 const sqlite3 = require('sqlite3').verbose();
+
 const app = express();
 app.use(express.static('.'))
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -11,8 +13,8 @@ app.use(bodyParser.json())
 
 const db = new sqlite3.Database(':memory:');
 db.serialize(function () {
- db.run("CREATE TABLE user (username TEXT, password TEXT, title TEXT)");
- db.run("INSERT INTO user VALUES ('privilegedUser', 'privilegedUser1', 'Administrator')");
+    db.run("CREATE TABLE user (username TEXT, password TEXT, title TEXT)");
+    db.run("INSERT INTO user VALUES ('privilegedUser', 'privilegedUser1', 'Administrator')");
 });
 
 
@@ -26,9 +28,9 @@ app.post('/login', function (req, res) {
     let password = req.body.password;
     let query = "SELECT title FROM user WHERE username = '" + username + "' AND password = '" + password + "'";
 
-        console.log(username);
-        console.log(password);
-        console.log(query);
+        console.log("username: " + username);
+        console.log("password: " + password);
+        console.log('query: ' + query);
 
 
         db.get(query, function (err, row) {
@@ -45,4 +47,6 @@ app.post('/login', function (req, res) {
 
 })
 
-app.listen(3000)
+const server = app.listen(3005, function () {
+    console.log('Server is running on port 3005');
+});
